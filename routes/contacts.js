@@ -53,30 +53,92 @@ router.post(
       });
 
       const contact = await newContact.save();
-      res.json(contact)
+      res.json(contact);
     } catch (err) {
-        console.error(er.message)
-        res.status(500).send('Serverske poteškoće')
+      console.error(er.message);
+      res.status(500).send("Serverske poteškoće");
     }
   }
 );
 
-// @route  PUT api/contacts/:id
+// @route  PUT api/contacts/:id  --> id se odnosi na id pojedinačnog komentara, a ne usera kojem pripada
 // @desc    ažuriranje
 // @access  private
 
-router.put("/:id", (req, res) => {
-  res.send("Updateaj");
+router.put("/:id", auth, async (req, res) => {
+  const { name, email, phone, type } = req.body;
+
+  //Build contact Object
+
+  const contactFields = {};
+
+  if (name) contactFields.name = name;
+  if (email) contactFields.email = email;
+  if (phone) contactFields.phone = phone;
+  if (type) contactFields.type = type;
+
+  console.log(req.params.id)
+  try {
+    let contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ msg: "Kontakt nije pronađen" });
+
+    ///osiguranje da je kontakt u vlasništvu usera
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Niste autorizirani za ovo" });
+    }
+
+    contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      { $set: contactFields },
+      { new: true }
+    );
+    res.json(contact);
+  } catch (error) {
+    console.error(er.message);
+    res.status(500).send("Serverske poteškoće");
+  }
 });
 
 // @route  PUT api/contacts/:id
 // @desc    ažuriranje
 // @access  private
 
-router.delete("/:id", (req, res) => {
-  res.send("Obriši");
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    let contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ msg: "Kontakt nije pronađen" });
+
+    ///osiguranje da je kontakt u vlasništvu usera
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Niste autorizirani za ovo" });
+    }
+
+    //findByIdAndDelete() je deprecated
+   await Contact.findByIdAndRemove(req.params.id);
+
+    res.json( {msg: "Kontakt je obrisan"});
+  } catch (error) {
+    console.error(er.message);
+    res.status(500).send("Serverske poteškoće");
+  }
 });
 
 module.exports = router;
 
-module.exports = router;
+///////////////////////////EXPRESS-VALIDATOR-OBJAŠNJENJE////////////////////////////////
+
+//  const errors = validationResult(req);
+//  if (!errors.isEmpty()) {
+//   return res.status(400).json({ errors: errors.array() });
+//   }
+
+//   ERRORS OBJEKT
+// {
+//     "errors": [
+//       {
+//         "location": "body",
+//         "msg": "Invalid value",
+//         "param": "username"
+//       }
+//     ]
+//   }

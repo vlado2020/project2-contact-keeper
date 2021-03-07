@@ -25,7 +25,7 @@ router.get("/", auth, async(req, res) => {
 });
 
 // @route  POST api/auth
-// @desc    Registracija usera
+// @desc    Login user
 // @access  public
 
 router.post(
@@ -64,7 +64,7 @@ router.post(
         payload,
         config.get("jwtSecret"),
         {
-          expiresIn: 3600 * 24,
+          expiresIn: 3600*24*30,
         },
         (err, token) => {
           if (err) throw err;
