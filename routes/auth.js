@@ -9,7 +9,7 @@ const { check, validationResult } = require("express-validator");
 const User = require("../models/User.js");
 
 // @route  GET api/auth
-// @desc    Registracija usera
+// @desc    get logged in user
 // @access  private
 
 router.get("/", auth, async(req, res) => {
@@ -31,8 +31,8 @@ router.get("/", auth, async(req, res) => {
 router.post(
   "/",
   [
-    check("email", "Upišite email s kojim ste se registrirali").isEmail(),
-    check("password", "Unesite password").exists(),
+    check("email", "Upišite ispravan email").isEmail(),
+    check("password", "Upišite ispravnu lozinku").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);

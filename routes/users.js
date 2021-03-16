@@ -2,9 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require('config');
+const config = require("config");
 const { check, validationResult } = require("express-validator");
-
 
 const User = require("../models/User.js");
 
@@ -31,8 +30,17 @@ router.post(
     try {
       let user = await User.findOne({ email });
 
+      console.log(user);
+
       if (user) {
         return res.status(400).json({ msg: "Ovaj email se već koristi" });
+      }
+
+      let user_check_name = await User.findOne({ name });
+      if (user_check_name) {
+        if (user_check_name.name === name) {
+          return res.status(400).json({ msg: "Ovo ime se već koristi" });
+        }
       }
 
       user = new User({
@@ -57,7 +65,7 @@ router.post(
         payload,
         config.get("jwtSecret"),
         {
-          expiresIn: 3600*24*30
+          expiresIn: 3600 * 24 * 30,
         },
         (err, token) => {
           if (err) throw err;
