@@ -82,7 +82,7 @@ const ContactForm = () => {
         value={phone}
         onChange={onChange}
       />
-      <h5> Contact Type</h5>
+      <h5> Tip kontakta</h5>
       <input
         type="radio"
         name="type"
@@ -90,7 +90,7 @@ const ContactForm = () => {
         checked={type === "personal"}
         onChange={onChange}
       />
-      Personal{" "}
+      Osobni kontakt{" "}
       <input
         type="radio"
         name="type"
@@ -98,7 +98,7 @@ const ContactForm = () => {
         checked={type === "professional"}
         onChange={onChange}
       />
-      Professional{" "}
+      Poslovni kontakt{" "}
       <div>
         <input
           type="submit"
