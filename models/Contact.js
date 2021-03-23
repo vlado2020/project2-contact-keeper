@@ -19,7 +19,8 @@ const ContactSchema = mongoose.Schema({
     },  
     phone:{
         type: String,
-        required: true
+        required: true,
+        default: '099/888 888'
     },
     type:{
         type: String,
