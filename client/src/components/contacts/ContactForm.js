@@ -66,7 +66,6 @@ const ContactForm = () => {
         placeholder="Name"
         name="name"
         value={name}
-        autoComplete="off"
         onChange={onChange}
       />
       <input
@@ -74,7 +73,6 @@ const ContactForm = () => {
         placeholder="Email"
         name="email"
         value={email}
-        autoComplete="off" 
         onChange={onChange}
       />
       <input
@@ -82,7 +80,6 @@ const ContactForm = () => {
         placeholder="Phone"
         name="phone"
         value={phone}
-        autoComplete="off" 
         onChange={onChange}
       />
       <h5> Tip kontakta</h5>
